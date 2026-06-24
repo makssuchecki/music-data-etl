@@ -1,8 +1,10 @@
 import requests
 from dotenv import load_dotenv
 import os
-from ingestion.lastfm.models import Scrobble
 from datetime import datetime, timezone
+from ingestion.lastfm.models import Scrobble
+from ingestion.lastfm.client import LastFmClient
+from ingestion.lastfm.extract import fetch_page
 
 load_dotenv()
 
@@ -32,3 +34,21 @@ test = Scrobble(
 )
 print(f"\nModel działa: {test.artist_name} — {test.track_name}")
 print(f"album_name pusty = None: {test.album_name}")
+
+
+client = LastFmClient()
+total = client.get_total_pages()
+print(f"\nMasz {total} stron scrobble'ów w Last.fm")
+
+data = client.get_recent_tracks(limit=3)
+tracks = data["recenttracks"]["track"]
+print(f"Pobrano {len(tracks)} utworów przez klienta")
+
+
+scrobbles = fetch_page(client, page=1)
+print(f"\nPierwsza strona: {len(scrobbles)} scrobble'ów")
+print("Przykład:")
+s = scrobbles[0]
+print(f"    {s.artist_name} - {s.track_name}")
+print(f"    album: {s.album_name}")
+print(f"    kiedy: {s.scrobbled_at}")
