@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from ingestion.lastfm.models import Scrobble
 from ingestion.lastfm.client import LastFmClient
 from ingestion.lastfm.extract import fetch_page
+from ingestion.loader import load_scrobbles
 
 load_dotenv()
 
@@ -52,3 +53,6 @@ s = scrobbles[0]
 print(f"    {s.artist_name} - {s.track_name}")
 print(f"    album: {s.album_name}")
 print(f"    kiedy: {s.scrobbled_at}")
+
+count = load_scrobbles(scrobbles)
+print(f"\nWstawiono {count} scrobble'ów do bazy")
