@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: scrobbles
+        description: "Surowe scrobble z Last.fm API"
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+          - name: artist_name
+            tests:
+              - not_null
+          - name: track_name
+            tests:
+              - not_null
+          - name: scrobbled_at
+            tests:
+              - not_null
