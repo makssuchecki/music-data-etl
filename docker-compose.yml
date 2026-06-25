@@ -20,16 +20,17 @@ services:
   airflow:
     image: apache/airflow:2.9.1-python3.11
     environment:
-      AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://music_user:music_password@postgres/music_dwh
-      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-      AIRFLOW__WEBSERVER__SECRET_KEY: "music-secret-key"
-      LASTFM_API_KEY: ${LASTFM_API_KEY}
-      LASTFM_USERNAME: ${LASTFM_USERNAME}
-      POSTGRES_HOST: postgres
-      POSTGRES_DB: music_dwh
-      POSTGRES_USER: music_user
-      POSTGRES_PASSWORD: music_password
+          _PIP_ADDITIONAL_REQUIREMENTS: "dbt-postgres psycopg2-binary"
+          AIRFLOW__CORE__EXECUTOR: LocalExecutor
+          AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://music_user:music_password@postgres/music_dwh
+          AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+          AIRFLOW__WEBSERVER__SECRET_KEY: "music-secret-key"
+          LASTFM_API_KEY: ${LASTFM_API_KEY}
+          LASTFM_USERNAME: ${LASTFM_USERNAME}
+          POSTGRES_HOST: postgres
+          POSTGRES_DB: music_dwh
+          POSTGRES_USER: music_user
+          POSTGRES_PASSWORD: music_password
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./ingestion:/opt/airflow/ingestion
@@ -41,12 +42,12 @@ services:
       postgres:
         condition: service_healthy
     command: >
-      bash -c "
-        airflow db migrate &&
-        airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com 2>/dev/null || true &&
-        airflow webserver --port 8080 &
-        airflow scheduler
-      "
+          bash -c "
+            airflow db migrate &&
+            airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com 2>/dev/null || true &&
+            airflow webserver --port 8080 &
+            airflow scheduler
+          "
     networks:
       - music_net
 

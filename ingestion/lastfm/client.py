@@ -31,7 +31,7 @@ class LastFmClient:
 
         data =response.json()
         if "error" in data:
-            raise ValueError(f"Last.fm error {data["error"]}: {data["message"]}")
+            raise ValueError(f"Last.fm error {data['error']}: {data['message']}")
         return data
     
     def get_recent_tracks(self, page=1, limit=200):
