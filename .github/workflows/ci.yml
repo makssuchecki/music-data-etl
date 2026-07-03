@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Lint + unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install ruff pytest pydantic requests python-dotenv psycopg2-binary
+
+      - name: Lint (ruff)
+        run: ruff check ingestion/
+
+      - name: Run unit tests
+        run: pytest tests/ -v
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          LASTFM_USERNAME: ${{ secrets.LASTFM_USERNAME }}
+
+  dbt-compile:
+    name: dbt compile
+    runs-on: ubuntu-latest
+    needs: test
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: music_user
+          POSTGRES_PASSWORD: music_password
+          POSTGRES_DB: music_dwh
+        options: >-
+          --health-cmd "pg_isready -U music_user"
+          --health-interval 10s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dbt
+        run: pip install dbt-postgres psycopg2-binary
+
+      - name: dbt compile
+        working-directory: dbt_project
+        run: dbt compile --profiles-dir .
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_DB: music_dwh
+          POSTGRES_USER: music_user
+          POSTGRES_PASSWORD: music_password
