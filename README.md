@@ -1,10 +1,10 @@
 # Music Data Pipeline
 
-End-to-end batch ETL pipeline for music listening data.
+End-to-end batch ETL pipeline for music listening data. (Last.fm API)
 
 ## Architecture
 
-**Stack:** Python · dbt · PostgreSQL · Apache Airflow · Docker · GitHub Actions
+**Stack:** Python - dbt - PostgreSQL - Apache Airflow - Docker - GitHub Actions
 
 ## Data Model
 
