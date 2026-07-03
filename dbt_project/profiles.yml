@@ -3,7 +3,7 @@ dbt_project:
   outputs:
     dev:
       type: postgres
-      host: postgres
+      host: "{{ env_var('POSTGRES_HOST', 'localhost') }}"
       port: 5432
       dbname: music_dwh
       user: music_user
