@@ -1,6 +1,6 @@
 # Music Data Pipeline
 
-End-to-end batch ETL pipeline for music listening data. (Last.fm API)
+End-to-end batch ELT pipeline for music listening data. (Last.fm API)
 
 ## Architecture
 
@@ -20,7 +20,7 @@ Star schema built on top of Last.fm scrobble history:
 
 ## Pipeline
 
-Airflow DAG `music_etl_daily` runs daily at 06:00 UTC:
+Airflow DAG `music_elt_daily` runs daily at 06:00 UTC:
 ingest_scrobbles -> dbt_staging -> dbt_marts -> dbt_test
 
 - **Retries:** 2 attempts with 5 minute delay
@@ -31,7 +31,7 @@ ingest_scrobbles -> dbt_staging -> dbt_marts -> dbt_test
 **Prerequisites:** Docker Desktop, Python 3.10+
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/music-data-etl.git
+git clone https://github.com/YOUR_USERNAME/music-data-elt.git
 cd music-data-etl
 
 cp .env.example .env
