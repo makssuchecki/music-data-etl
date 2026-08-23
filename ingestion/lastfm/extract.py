@@ -3,6 +3,10 @@ from datetime import datetime, timezone
 from ingestion.lastfm.client import LastFmClient
 from ingestion.lastfm.models import Scrobble
 
+
+def parse_track(track: dict) -> Scrobble | None:
+    ...
+
 def parse_track(track: dict) -> Scrobble | None:
     """Zamienia surowy dict z API na model Scrobble. Zwraca None dla 'now playing'."""
     if track.get("@attr", {}).get("nowplaying"):

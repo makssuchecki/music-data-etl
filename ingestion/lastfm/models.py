@@ -2,14 +2,13 @@ from datetime import datetime
 
 from pydantic import BaseModel, field_validator
 
-
 class Scrobble(BaseModel):
     track_name: str
     artist_name: str
-    album_name: Optional[str] = None
+    album_name: str | None = None
     scrobbled_at: datetime
-    mbid: Optional[str] = None
-
+    mbid: str | None = None
+    
     @field_validator("mbid", mode="before")
     @classmethod
     def empty_string_to_none(cls, v):
